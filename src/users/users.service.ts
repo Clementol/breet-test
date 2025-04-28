@@ -8,10 +8,11 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { PaginationQueryParamsDto } from 'src/shared/src';
 
 @Injectable()
 export class UsersService {
-  // private readonly logger = new Logger(UsersService.name);
+  // private readonly logger = new Logger(UsersService.name)f;
   private readonly USERS_CACHE_TTL  = 1_800_000;
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
@@ -25,23 +26,23 @@ export class UsersService {
         const _ = await this.userModel.insertMany(usersData);
         // this.logger.log('users added to database')
       }
-      const users = await this.userModel.find({})
-      this.cacheManager.set('users', users.map(product => new UserResponseDto(product)), this.USERS_CACHE_TTL)
     } catch (error) {
       // this.logger.log('error inserting users to database collection' + error)
       return Promise.reject(error)
     }
   }
 
-  async findAll() {
+  async findAll({ page = 1, limit = 10}: PaginationQueryParamsDto) {
     try {
-      const cachedUsers = await this.cacheManager.get('users')
+      const skip = (page - 1) * limit;
+      const USERS_CACHE_KEY = `users_page_${page}_limit${limit}`;
+      const cachedUsers = await this.cacheManager.get(USERS_CACHE_KEY);
       if (cachedUsers) return cachedUsers;
-      const users = await this.userModel.find({})//.limit(20).lean()
+      const users = await this.userModel.find({}).skip(skip).limit(limit).lean();
       const usersDtos = users.map(user => new UserResponseDto(user))
-      this.cacheManager.set('users', usersDtos, this.USERS_CACHE_TTL);
+      await this.cacheManager.set(USERS_CACHE_KEY, usersDtos, this.USERS_CACHE_TTL);
       return usersDtos;
-      return
+
     } catch (error) {
 
       return Promise.reject(error)

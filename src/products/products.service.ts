@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { ProductResponseDto } from './dto/response.product.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
+import { PaginationQueryParamsDto } from 'src/shared/src';
 
 
 @Injectable()
@@ -31,22 +32,22 @@ export class ProductsService {
         const _ = await this.productModel.insertMany(editedProd);
         // this.logger.log('products added to database collection')
       }
-      const products = await this.productModel.find({})
-      await this.cacheManager.set('products', products.map(product => new ProductResponseDto(product)), this.PRODUCTS_CACHE_TTL)
+  
     } catch (error) {
       // this.logger.log('error inserting products to database collection' + error)
       return Promise.reject(error)
     }
   }
 
-  async findAll() {
+  async findAll({ page = 1, limit = 10}: PaginationQueryParamsDto) {
     try {
-
-      const cachedProducts = await this.cacheManager.get('products');
+      const skip = (page - 1) * limit;
+      const PRODUCTS_CACHE_KEY = `products_page_${page}_limit${limit}`;
+      const cachedProducts = await this.cacheManager.get(PRODUCTS_CACHE_KEY);
       if (cachedProducts) return cachedProducts;
-      const products = await this.productModel.find({}).lean();
+      const products = await this.productModel.find({}).skip(skip).limit(limit).lean();
       const productDtos = products.map(product => new ProductResponseDto(product))
-      this.cacheManager.set('products', productDtos, this.PRODUCTS_CACHE_TTL)
+      this.cacheManager.set(PRODUCTS_CACHE_KEY, productDtos, this.PRODUCTS_CACHE_TTL)
       return productDtos
     } catch (error) {
       return Promise.reject(error)

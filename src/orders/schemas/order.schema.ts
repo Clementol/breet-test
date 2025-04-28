@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Schema as MongooseSchema } from 'mongoose';
 
-@Schema({ versionKey: false, timestamps: true })
+@Schema({ versionKey: false })
 export class OrederItems {
     @Prop({ type:  MongooseSchema.Types.ObjectId, ref: 'products' })
     product:  MongooseSchema.Types.ObjectId | string;

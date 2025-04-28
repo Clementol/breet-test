@@ -21,17 +21,29 @@ export class OrdersService {
 
   async findAll() {
     try {
-      const cachedOrders = await this.cacheManager.get('orders');
-      if (cachedOrders) return cachedOrders;
       const orders = await this.orderModel.find({}, { _id: 0 }).lean<Order[]>()
-      this.cacheManager.set('orders', orders, this.ORDERS_CACHE_TTL)
+
       return orders
     } catch (error) {
       return Promise.reject(error)
     }
   }
 
-  findOne(id: number) {
+  async findByUserId(id: string) {
+    try {
+      const orderKey = `order:${id}`
+      const cachedOrders = await this.cacheManager.get(orderKey);
+      if (cachedOrders) return cachedOrders;
+      const orders = await this.orderModel.find({ user: id }, { _id: 0 }).lean<Order[]>()
+      this.cacheManager.set(orderKey, orders, this.ORDERS_CACHE_TTL)
+      return orders;
+    } catch (error) {
+      
+    }
+    return `This action returns a #${id} order`;
+  }
+
+  findOne(id: string) {
     return `This action returns a #${id} order`;
   }
 

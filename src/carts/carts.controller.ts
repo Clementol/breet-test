@@ -35,6 +35,12 @@ export class CartsController {
     return this.cartsService.processCheckOut(userId);
   }
 
+  @Post('bulk-checkout')
+  processBulkCheckOut(
+  ) {
+    return this.cartsService.processBulkCheckOut();
+  }
+
   @Get(':userId')
   findByUserId(@Param('userId') userId: string) {
     return this.cartsService.findByUserId(userId);

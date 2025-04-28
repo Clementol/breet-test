@@ -20,10 +20,7 @@ export class AppService implements OnApplicationBootstrap {
   }
 
   async getHello(): Promise<string> {
-    await this.cacheManager.set('cached_item', { key: 32 })
-    // await this.cacheManager.del('cached_item')
-    const cachedItem = await this.cacheManager.get('cached_item');
-    console.log({ cachedItem });
+
     return 'Hello World!';
   }
 }
