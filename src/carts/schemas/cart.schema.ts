@@ -16,7 +16,7 @@ export class Cart {
     _id: MongooseSchema.Types.ObjectId;
 
     @Prop({ type:  MongooseSchema.Types.ObjectId, ref: 'users', index: true })
-    user:  MongooseSchema.Types.ObjectId;
+    user:  MongooseSchema.Types.ObjectId | string;
 
     @Prop({ type: [{ type: CartItemSchema }], default: [] })
     items: CartItems[]

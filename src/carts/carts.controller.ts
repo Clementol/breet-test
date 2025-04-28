@@ -20,6 +20,7 @@ export class CartsController {
   }
 
   @Post(':userId/products/:productId/quantity')
+  @ApiOperation({ summary: 'add or remove from cart' })
   updateCartQty(
     @Param('userId') userId: string,
     @Param('productId') productId: string,

@@ -93,15 +93,14 @@ export class CartsService {
         await Promise.all(cartsExist.map((cart) => this.updateStockQty({ cart: cart })));
         return Promise.resolve({ message: 'success' });
       }, {
-        retries: 3,
+        retries: 5,
         onRetry: (error, attempt) => 
             this.logger.error(
-                `Error consuming message, executing retry ${attempt}/3`,
-                error)
+                `Error consuming message, executing retry ${attempt}/5`,
+                )
     })
     } catch (error) {
   
-      console.log({ error });
       return Promise.reject(error);
     }
   }
@@ -159,8 +158,9 @@ export class CartsService {
           orderItems.length && this.orderModel.create([{ user, items: orderItems }], { session })
         ]).then(async () => {
           // update user cart, products and order to redis cache
-          const orders = await this.orderModel.find({ user }, { _id: 0 }).lean<Order[]>();
-          const cart = await this.cartModel.findOne({ user }, { _id: 0 }).lean<Cart>() as Cart;
+          const orders = await this.orderModel.find({ user }, { }).lean<Order[]>();
+          const cart = await this.cartModel.findOne({ user }, { }).lean<Cart>() as Cart;
+  
           const orderKey = `order:${user.toString()}`
           const cartKey = `cart:${user.toString()}`
           this.cacheManager.set(orderKey, orders);
@@ -171,6 +171,7 @@ export class CartsService {
         return orderItems
       }
     } catch (error) {
+
       await session.abortTransaction();
       return Promise.reject(error);
     } finally {

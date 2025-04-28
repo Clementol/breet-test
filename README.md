@@ -93,3 +93,9 @@ Go to `localhost:3000/api` for documentation
     - High checkout failure rates
 
     - Redis memory usage
+
+  ## Video Demo
+
+  <video width="640" height="380" controls>
+  <source src="https://youtu.be/yQML6AqIQME" type="video/mp4">
+</video>
