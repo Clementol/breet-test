@@ -6,6 +6,11 @@
 
 <h1 style="text-align: center;" >Breet Assessment</h1>
 
+## Tech Stack
+- Node.js
+- MongoDB
+- Redis
+
 ## Prerequisites
 1. Have NodeJs installed on your system
 2. Have nest framework installed globally using `npm`
