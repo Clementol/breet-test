@@ -97,5 +97,9 @@ Go to `localhost:3000/api` for documentation
   ## Video Demo
 
   <video width="640" height="380" controls>
-  <source src="https://youtu.be/yQML6AqIQME" type="video/mp4">
+  <source src="https://youtu.be/yQML6AqIQME?si=VuIH7wFZU-fW6mj0" type="video/mp4">
 </video>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/yQML6AqIQME?si=VuIH7wFZU-fW6mj0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"  allowfullscreen></iframe>
+
+[Watch the video](https://www.youtube.com/embed/yQML6AqIQME?si=VuIH7wFZU-fW6mj0)
